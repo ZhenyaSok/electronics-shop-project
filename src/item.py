@@ -39,6 +39,7 @@ class Item:
         экземпляры класса Item данными из файла src/items.csv"""
 
         # items_csv_read = os.path.join('../src/items.csv')
+        file_path = os.path.join(os.path.dirname(__file__), '..', file_path)
         with open(file_path, mode='r', encoding='windows-1251') as csvfile:
             reader = csv.DictReader(csvfile)
             cls.all.clear()
