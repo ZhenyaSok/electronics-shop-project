@@ -24,3 +24,13 @@ def test_calculate_total_price():
     item3 = Item('Смарт-часы', 5000, 5)
     assert item3.calculate_total_price() == 25000
 
+def test_str():
+    item = Item('test1', 10000, 20)
+
+def test_repr():
+    """Проверка на ожидаемый результат по шаблону """
+    item = Item('test1', 10000, 20)
+
+    assert repr(item) == "Item('test1', 10000, 20)"
+
+
