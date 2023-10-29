@@ -2,14 +2,12 @@ from src.item import Item
 
 
 class MixinLog:
+    __language = 'EN'
 
-    def __init__(self):
-        self.__language = 'EN'
-
+    @property
     def language(self):
         return self.__language
 
-    @property
     def change_lang(self):
 
         if self.language.upper() == 'RU':
