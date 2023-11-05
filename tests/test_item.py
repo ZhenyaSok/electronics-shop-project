@@ -1,6 +1,10 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
-from src.item import Item
-from  src.phone import Phone
+from src.item import Item, InstantiateCSVError
+from src.phone import Phone
+
+
+import csv
+
 
 item1 = Item("Смартфон", 10000, 20)
 
@@ -41,3 +45,10 @@ def test_repr():
     assert repr(item) == "Item('test1', 10000, 20)"
 
 
+def test_instantiate_from_csv_error():
+    error = Item.instantiate_from_csv()
+    assert error == 'Файл items.csv поврежден'
+
+def test_instantiate_from_csv_error2():
+    error = Item.instantiate_from_csv("random.csv")
+    assert error == "Отсутствует файл item.csv"

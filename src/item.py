@@ -1,6 +1,17 @@
 import csv
 import os
 
+class InstantiateCSVError(Exception):
+    """
+    Исключение при повреждении файла
+    """
+
+    def __init__(self):
+        self.message = 'Файл items.csv поврежден'
+
+    def __str__(self):
+        return self.message
+
 
 class Item:
     """
@@ -21,6 +32,7 @@ class Item:
         self.price = price
         self.quantity = quantity
         Item.all.append(self)
+        super().__init__()
 
     @property
     def name(self):
@@ -34,19 +46,34 @@ class Item:
         self.__name = name_str[:10]
 
     @classmethod
-    def instantiate_from_csv(cls, file_path):
+    def instantiate_from_csv(cls, file_path='../src/items.csv'):
         """instantiate_from_csv() - класс-метод, инициализирующий
         экземпляры класса Item данными из файла src/items.csv"""
 
-        # items_csv_read = os.path.join('../src/items.csv')
-        file_path = os.path.join(os.path.dirname(__file__), '..', file_path)
-        with open(file_path, mode='r', encoding='windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            cls.all.clear()
-            for row in reader:
-                item = cls(row['name'], float(row['price']), int(row['quantity']))
-                if item not in cls.all:
-                    cls.all.append(item)
+        try:
+            # items_csv_read = os.path.join('../src/items.csv')
+            # file_path = os.path.join(os.path.dirname(__file__), '..', file_path)
+            with open(file_path, mode='r', encoding='windows-1251') as csvfile:
+                reader = csv.DictReader(csvfile)
+                if reader.fieldnames != ['name', 'price', 'quantity']:
+                    raise InstantiateCSVError
+                cls.all.clear()
+                for row in list(reader):
+                    item = cls(row['name'], float(row['price']), int(row['quantity']))
+                    if item not in cls.all:
+                        cls.all.append(item)
+
+        except InstantiateCSVError as error:
+            print(error)
+            return 'Файл items.csv поврежден'
+            # raise InstantiateCSVError()
+        except FileNotFoundError:
+            print("Отсутствует файл item.csv")
+            return f"Отсутствует файл item.csv"
+
+        #
+        # except FileNotFoundError:
+        #     print('Отсутствует файл items.csv')
 
     @staticmethod
     def string_to_number(num):
@@ -76,3 +103,43 @@ class Item:
 
     def __str__(self):
         return self.__name
+
+
+
+    # @staticmethod
+    # def instantiate_from_csv_test(path):
+    #     """
+    #     Проверка наличия и целостности файла
+    #     """
+    #     try:
+    #         file_path = os.path.join('../src/items.csv')
+    #         with open(file_path, mode='r', encoding='windows-1251') as csvfile:
+    #             reader = csv.DictReader(csvfile)
+    #             for row in list(reader):
+    #                 if (row.get('name') and row.get('price') and row.get('quantity')) in ['', None]:
+    #                     raise InstantiateCSVError
+    #                 if row['name'] != str or row['price'] != int or row['quantity'] != int:
+    #                     print("Файл item.csv поврежден")
+    #
+    #     except FileNotFoundError:
+    #         print('Отсутствует файл items.csv')
+    #         return 'Отсутствует файл items.csv'
+    #     except InstantiateCSVError as exep:
+    #         print(exep.message)
+    #         return exep.message
+
+
+
+
+
+
+
+
+    # def instantiate_from_csv(self):
+    #     try:
+    #         open("items.csv")
+    #     except FileNotFoundError:
+    #         print("Отсутствует файл item.csv")
+    #
+    #     except InstantiateCSVError:
+    #         print("InstantiateCSVError")
