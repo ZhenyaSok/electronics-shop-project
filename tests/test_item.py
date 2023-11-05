@@ -46,7 +46,7 @@ def test_repr():
 
 
 def test_instantiate_from_csv_error():
-    error = Item.instantiate_from_csv()
+    error = Item.instantiate_from_csv('items.csv')
     assert error == 'Файл items.csv поврежден'
 
 def test_instantiate_from_csv_error2():
